@@ -70,6 +70,8 @@ will present a brief review, to refresh your memory.
 
 ### Heaps
 
+#### Insertion
+
 A *heap* is a complete binary tree (but *not* a complete binary search
 tree). Insertions occur at the "rightmost" unoccupied space at the
 leaf level. For example, in the diagram
@@ -96,6 +98,8 @@ graph TD;
 
 However, heaps have another invariant: the subtree below an element
 contains only elements that are greater than or equal to its value.
+(Technically, this means we have a *minheap*. A *maxheap* would invert
+this invariant.)
 Because 8 is less than its parent 10, we need to *percolate* it
 upwards.
 
@@ -146,3 +150,92 @@ graph TD;
 8 --> 10;
 3 --> 4;
 ```
+
+#### Deletion
+
+When deleting an element from the heap, we always delete the root element. Let's complete
+the tree above as a starting point:
+
+```mermaid
+graph TD;
+
+2 --> 8;
+2 --> 3;
+8 --> 16;
+8 --> 10;
+3 --> 4;
+3 --> 12;
+```
+
+We then delete the root (2), and promote the *rightmost leaf* to be the new root:
+
+```mermaid
+graph TD;
+
+12 --> 8;
+12 --> 3;
+8 --> 16;
+8 --> 10;
+3 --> 4;
+```
+
+This violates our invariant, but rather than percolate upwards from the insertion point,
+we have to percolate *downwards* from the new root. We do this by percolating the new
+element to the *lesser* of its children (which will be less than or equal to its former
+sibling, which is now its child).
+
+```mermaid
+graph TD;
+
+3 --> 8;
+3 --> 12;
+8 --> 16;
+8 --> 10;
+12 --> 4;
+```
+
+We continue this until the element we moved respects the invariant
+
+```mermaid
+graph TD;
+
+3 --> 8;
+3 --> 4;
+8 --> 16;
+8 --> 10;
+4 --> 12;
+```
+
+#### Efficient Representation
+
+Since heaps are complete binary trees, they can be implemented very efficiently
+and compactly using an array. This is based on a breadth-first (level-order)
+enumeration of the nodes in the heap.  This enumeration is exemplified as follows:
+
+```mermaid
+graph TD;
+
+8 --> 10;
+8 --> 13;
+10 --> 16;
+10 --> 15;
+13 --> 20;
+```
+
+|  0  |  1  |  2  |  3  |  4  |  5  |
+| --- | --- | --- | --- | --- | --- |
+|  8  | 10  | 13  | 16  | 15  | 20  |
+
+Note that the node at index $i$ has children at indices $2i+1$ and $2i+2$ (one
+or two children might not even exist, of course), whereas the parent of index
+$i$ (if it exists) is at index $\lbot \frac{i-1}{2} \rbot$.
+
+The linked structure is what you will implement in `LinkedMinHeap.java`, and you will need
+to implement the same data structure in this array form in `ArrayMinHeap.java`. Obviously,
+you will need to modify not only how the data is represented in memory, but how the
+percolation operations work. Since the functionality provided by these data structures
+is identical, you can use the same unit tests you develop for the linked version when
+testing the array version. All you should need to do is change the type referenced in the
+tests.
+
+
