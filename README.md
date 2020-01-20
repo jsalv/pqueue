@@ -68,11 +68,81 @@ how it differs from a functional interface, etc.
 While we assume you are already familiar with these structures, we
 will present a brief review, to refresh your memory.
 
+### Heaps
+
 A *heap* is a complete binary tree (but *not* a complete binary search
-tree). Insertions occur at the "rightmost" unoccupied space at the leaf level. For example, in the diagram
+tree). Insertions occur at the "rightmost" unoccupied space at the
+leaf level. For example, in the diagram
 
 ```mermaid
-table TB;
+graph TD;
 
-A --> B;
+3 --> 10;
+3 --> 4;
+10 --> 16;
+```
+
+we would add the next element below 10, to the right of 16. Let's
+say we add 8 as the next value. This would then yield
+
+```mermaid
+graph TD;
+
+3 --> 10;
+3 --> 4;
+10 --> 16;
+10 --> 8;
+```
+
+However, heaps have another invariant: the subtree below an element
+contains only elements that are greater than or equal to its value.
+Because 8 is less than its parent 10, we need to *percolate* it
+upwards.
+
+```mermaid
+graph TD;
+
+3 --> 10;
+3 --> 4;
+8 --> 16;
+8 --> 10;
+```
+
+8 is now less than or equal to all of the elements below it, and
+greater than its parent 3. If we were now to insert 2, it would
+become the first child of 4 (since the subtree under 8 is complete).
+
+```mermaid
+graph TD;
+
+3 --> 10;
+3 --> 4;
+8 --> 16;
+8 --> 10;
+4 --> 2;
+```
+
+Again, this element is less than its parent (4), so it needs to
+percolate upwards.
+
+```mermaid
+graph TD;
+
+3 --> 10;
+3 --> 2;
+8 --> 16;
+8 --> 10;
+2 --> 4;
+```
+
+2 is still less than its parent (3), so we have to percolate again
+
+```mermaid
+graph TD;
+
+2 --> 10;
+2 --> 3;
+8 --> 16;
+8 --> 10;
+3 --> 4;
 ```
