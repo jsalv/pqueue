@@ -226,9 +226,9 @@ graph TD;
 | --- | --- | --- | --- | --- | --- |
 |  8  | 10  | 13  | 16  | 15  | 20  |
 
-Note that the node at index $i$ has children at indices $2i+1$ and $2i+2$ (one
+Note that the node at index $`i`$ has children at indices $`2i+1`$ and $`2i+2`$ (one
 or two children might not even exist, of course), whereas the parent of index
-$i$ (if it exists) is at index $\lbot \frac{i-1}{2} \rbot$.
+$`i`$ (if it exists) is at index $`\lfloor \frac{i-1}{2} \rfloor`$.
 
 The linked structure is what you will implement in `LinkedMinHeap.java`, and you will need
 to implement the same data structure in this array form in `ArrayMinHeap.java`. Obviously,
