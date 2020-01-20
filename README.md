@@ -230,12 +230,68 @@ Note that the node at index $`i`$ has children at indices $`2i+1`$ and $`2i+2`$ 
 or two children might not even exist, of course), whereas the parent of index
 $`i`$ (if it exists) is at index $`\lfloor \frac{i-1}{2} \rfloor`$.
 
-The linked structure is what you will implement in `LinkedMinHeap.java`, and you will need
-to implement the same data structure in this array form in `ArrayMinHeap.java`. Obviously,
+The linked structure is what you will implement in `LinkedMinHeap`, and you will need
+to implement the same data structure in this array form in `ArrayMinHeap`. Obviously,
 you will need to modify not only how the data is represented in memory, but how the
 percolation operations work. Since the functionality provided by these data structures
 is identical, you can use the same unit tests you develop for the linked version when
 testing the array version. All you should need to do is change the type referenced in the
 tests.
+
+### Priority Queues
+
+The Priority Queue is an Abstract Data Type (ADT) with a very simple property:  Every
+element to be enqueued is attached a certain positive integer priority, which predetermines
+its order in the queue. By convention, smaller integers are considered "higher" in
+terms of priority, such that, for example, priority 1 is considered a higher priority than
+3.  Dequeueings only happen from the top of the queue, after which the element "before"
+the first one will be available for immediate processing.  We see these kinds of queues all
+the time in real life.
+
+A simple FIFO (first-in, first-out) queue might look like
+
+```mermaid
+graph LR;
+
+N --> F --> L --> D --> A --> G --> W;
+```
+
+where N is the head of the queue. Adding a new element C works as we'd expect from 132:
+
+```mermaid
+graph LR;
+
+N --> F --> L --> D --> A --> G --> W --> C;
+```
+
+A priority queue, by contrast, assigns a priority to each of these:
+
+```mermaid
+graph LR;
+
+N,1 --> F,2 --> L,4 --> D,6 --> A,8 --> G,11 --> W,15;
+```
+
+Now we're not just adding C, because it too has a priority (say it's 5). We would not
+add C,5 at the end, because C has a higher priority (5) than W (15). Instead, we have
+to insert it between L and D:
+
+```mermaid
+graph LR;
+
+N,1 --> F,2 --> L,4 --> C,5 --> D,6 --> A,8 --> G,11 --> W,15;
+```
+
+The obvious thing to do is to scan through the queue linearly until you find the
+appropriate place for the new element. This is how you will implement
+`LinearPriorityQueue`. This is inefficient, however ($`\mathcal{O}(n)`$), so you will
+be implementing a second version, using a binary minheap (which you have already done
+in this project!). This will be `MinHeapPriorityQueue`. Since minheaps are complete and
+balanced, enqueuing and dequeueing should be $`\mathcal{O}(\log_2 n)`$. This makes minheap
+a very good choice for implementing a priority queue.
+
+## Tips, Hints, and Guidelines
+
+## Submission and Grading
 
 
