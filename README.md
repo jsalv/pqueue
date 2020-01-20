@@ -102,7 +102,7 @@ upwards.
 ```mermaid
 graph TD;
 
-3 --> 10;
+3 --> 8;
 3 --> 4;
 8 --> 16;
 8 --> 10;
@@ -115,7 +115,7 @@ become the first child of 4 (since the subtree under 8 is complete).
 ```mermaid
 graph TD;
 
-3 --> 10;
+3 --> 8;
 3 --> 4;
 8 --> 16;
 8 --> 10;
@@ -128,7 +128,7 @@ percolate upwards.
 ```mermaid
 graph TD;
 
-3 --> 10;
+3 --> 8;
 3 --> 2;
 8 --> 16;
 8 --> 10;
@@ -140,7 +140,7 @@ graph TD;
 ```mermaid
 graph TD;
 
-2 --> 10;
+2 --> 8;
 2 --> 3;
 8 --> 16;
 8 --> 10;
