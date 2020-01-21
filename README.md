@@ -292,6 +292,56 @@ a very good choice for implementing a priority queue.
 
 ## Tips, Hints, and Guidelines
 
+You may find these useful:
+
+ * Familiarize yourself with the basics of `git`. There is a tutorial at
+   https://gitlab.cs.umd.edu/mmarsh/git-tutorial, which was written for more git-heavy
+   courses, but should still be useful.
+ * Read the JavaDoc for the interfaces that you will be extending: `MinHeap` and `PriorityQueue`.
+ * We strongly suggest that employ **test-driven development**, in which you develop your
+   unit tests first to define the desired behavior, and then write your code so that it
+   passes these tests.
+ * For the data structures we've provided, read the source code and unit tests. This will help
+   you design your implementation and develop your own tests.
+ * Our tests will look at corner cases in the behavior of your implementation. You should try
+   to develop thorough **stress tests** that test *all conceivable* inputs, including
+   ones that are malformed. If your code should throw exceptions in certain (however unlikely)
+   situations, make sure you are testing for those exceptions.
+ * We've provided a `StudentTests` class with a number of unit tests. Take a look at this,
+   because it might help you develop unit tests where exceptions are expected.
+ * You may use any IDE you like. If you don't like Eclipse, feel free to use a different one.
+   The Eclipse Course Management Plugin will not work for this course.
+ * You will not *need* any of the functional programming features introduces in Java 8, but
+   you might find them useful in testing. For example:
+   ```java
+   List<Integer> priorities = IntStream.range(1, MAX_PRIORITY + 1).boxed().
+       collect(Collectors.toList());
+   Collections.shuffle(priorities, r);
+   ```
+   is much simpler than the equivalent with `for` loops.
+
 ## Submission and Grading
 
+You will submit your code to the department's https://submit.cs.umd.edu server as a 
+zip file. Credit will be awarded based on the number of tests that your code passes.
+Additionally, we will inspect your code to ensure that it meets certain criteria:
 
+ * `ArrayMinHeap` must use contiguous storage, whether an `ArrayList`, a `Vector`, or a raw array.
+ * `MinHeapPriorityQueue` must use one of *your* minheap implementations.
+ * You *may not* use built-in or third-party implementations of minheaps (or maxheaps) or
+   priority queues.
+
+You should use the `src/Archiver.java` or `src/AdvancedArchiver.java` utility to create your
+zip file. This will exclude the `.git` and `doc` folders, to reduce the size of your file.
+It should be run from the top level of the project repository (the parent directory of `src`).
+A simple way to test if you're calling `Archiver` correctly is to prepare a zip file from the skeleton code, and submit it.
+
+The tests are all release tests, so you will not get to see the actual test code, only whether
+your code ran successfully on each. You will have 5 release tokens in a 24-hour period, so
+you should do thorough unit testing on your own before submitting. We will use your
+highest-scoring submission before the deadline.
+**No credit will be awarded for late submissions.**
+
+We will run the MoSS Software Similarity Detection System on all of the submissions. We
+*will* catch any instances of plagiarism, and don't enjoy dealing with the Office of Student
+Conduct any more than you do (we're very busy).
