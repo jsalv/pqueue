@@ -290,6 +290,36 @@ in this project!). This will be `MinHeapPriorityQueue`. Since minheaps are compl
 balanced, enqueuing and dequeueing should be $`\mathcal{O}(\log_2 n)`$. This makes minheap
 a very good choice for implementing a priority queue.
 
+
+## Iterators
+
+There are a few things you need to look up/study (Google is your best friend):
+
+* How to implement an iterator
+* Difference between Fail-fast Iterator and Fail-safe Iterator
+
+
+For your first project, you will need to:
+
+* Implement **fail-fast** Iterators for your four classes.
+* Implement `next()` and `hasNext()` methods. (You don't need to implement `remove()` method, but you should study for it! )
+* This fail-fast iterator needs to throw an `java.util.concurrentmodificationexception` when you need to.
+
+Something about Iterators and `java.util.concurrentmodificationexception`:
+
+* After you create an iterator, the iterator will return the elements in the data structure
+in some order every `next()` call. However, if you modify the data structure, it could 
+mess up what the iterator next will return because of the new elements. Therefore, we need 
+to specify the bahavior of the iterator by specifying what kind of iterator to use.
+* Fail-fast iterator will immediately report this potentially dangerous behavior by throwing
+an `java.util.concurrentmodificationexception`. Please note that, it is completely fine 
+to add or remove an element when you have iterators created before you modify the data structure.
+But it is **not** fine (where you should throw an exception) to continue to make function calls 
+on those old iterators. To avoid that exception, you need to create a new iterator and use
+the new one.
+
+
+
 ## Tips, Hints, and Guidelines
 
 You may find these useful:
