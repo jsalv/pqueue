@@ -61,7 +61,7 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 	 * of the underlying element structure that you will choose to use to implement this class.
 	 * @see #LinearPriorityQueue()
 	 * @param capacity The initial capacity to endow your inner implementation with.
-	 * @throws InvalidCapacityException if the capacity provided is negative.
+	 * @throws InvalidCapacityException if the capacity provided is less than 1.
 	 */
 	public LinearPriorityQueue(int capacity) throws InvalidCapacityException{	// DO *NOT* ERASE THE "THROWS" DECLARATION!
 		throw new UnimplementedMethodException();
