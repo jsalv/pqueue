@@ -206,6 +206,15 @@ graph TD;
 4 --> 12;
 ```
 
+#### Iteration
+
+For our heap structures, we want to be able to visit all of the nodes
+in ascending order. You will need to figure out how to do this while:
+
+ * not modifying the backing structure (that is, the array or linked list), and
+ * detecting changes to the backing structure during iteration, and throwing
+   a `java.util.ConcurrentModificationException`.
+
 #### Efficient Representation
 
 Since heaps are complete binary trees, they can be implemented very efficiently
@@ -290,35 +299,41 @@ in this project!). This will be `MinHeapPriorityQueue`. Since minheaps are compl
 balanced, enqueuing and dequeueing should be $`\mathcal{O}(\log_2 n)`$. This makes minheap
 a very good choice for implementing a priority queue.
 
+#### Iteration
 
-## Iterators
+For our priority queues, we want to be able to visit all of the nodes
+in priority-FIFO order. That is, the highest priority items should be returned
+first, and for items of equal priority, they should be returned in FIFO order.
+The same considerations hold for these iterators as for the heap iterators.
 
-There are a few things you need to look up/study (Google is your best friend):
+## General Notes on Iterators
+
+You will need to review (in any Java reference):
 
 * How to implement an iterator
-* Difference between Fail-fast Iterator and Fail-safe Iterator
-
+* The difference between a *fail-fast* iterator and a *fail-safe* iterator
 
 For your first project, you will need to:
 
 * Implement **fail-fast** Iterators for your four classes.
-* Implement `next()` and `hasNext()` methods. (You don't need to implement `remove()` method, but you should study for it! )
-* This fail-fast iterator needs to throw an `java.util.concurrentmodificationexception` when you need to.
-* You also need to throw `NoSuchElementException` when you call `next()` and there is no more element.
+* Implement the `next()` and `hasNext()` methods. (You don't need to implement the
+ `remove()` method for this project, but may in the future.)
+* This fail-fast iterator needs to throw a `java.util.ConcurrentModificationException` when appropriate.
+* You also need to throw `NoSuchElementException` when appropriate.
 
-Something about Iterators and `java.util.concurrentmodificationexception`:
+Some observations about Iterators and `java.util.ConcurrentModificationException`:
 
-* After you create an iterator, the iterator will return the elements in the data structure
-in some order every `next()` call. However, if you modify the data structure, it could 
-mess up what the iterator next will return because of the new elements. Therefore, we need 
-to specify the bahavior of the iterator by specifying what kind of iterator to use.
-* Fail-fast iterator will immediately report this potentially dangerous behavior by throwing
-an `java.util.concurrentmodificationexception`. Please note that, it is completely fine 
-to add or remove an element when you have iterators created before you modify the data structure.
-But it is **not** fine (where you should throw an exception) to continue to make function calls 
-on those old iterators. To avoid that exception, you need to create a new iterator and use
-the new one.
-
+* After you create an iterator, the iterator will return the elements in
+  the data structure in some order every `next()` call (see the specifics for
+  each type of data structure above). However, if you modify the data
+  structure, it could mess up what the iterator `next()` will return because
+  of the new elements. Therefore, we need  to specify the behavior of the
+  iterator by specifying what kind of iterator to use.
+* Fail-fast iterators will immediately report this potentially dangerous
+  behavior by throwing a `java.util.ConcurrentModificationException`. The error condition is
+  when you have an iterator created before some modification, and you attempt
+  to use it again (calling `next()`, `hasNext()`, etc.) after the modification.
+  Any modifications of a data structure invalidate all current iterators.
 
 
 ## Tips, Hints, and Guidelines
