@@ -304,6 +304,7 @@ For your first project, you will need to:
 * Implement **fail-fast** Iterators for your four classes.
 * Implement `next()` and `hasNext()` methods. (You don't need to implement `remove()` method, but you should study for it! )
 * This fail-fast iterator needs to throw an `java.util.concurrentmodificationexception` when you need to.
+* You also need to throw `NoSuchElementException` when you call `next()` and there is no more element.
 
 Something about Iterators and `java.util.concurrentmodificationexception`:
 
