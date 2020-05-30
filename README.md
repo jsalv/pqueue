@@ -73,7 +73,7 @@ will present a brief review, to refresh your memory.
 #### Insertion
 
 A *heap* is a complete binary tree (but *not* a complete binary search
-tree). Insertions occur at the "rightmost" unoccupied space at the
+tree). Insertions occur at the "leftmost" unoccupied space at the
 leaf level. For example, in the diagram
 
 ```mermaid
