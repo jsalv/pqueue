@@ -92,7 +92,56 @@ public class StudentTests {
     }
     
     @Test
-    public void testing123() {
-    	assertTrue(true);
+    public void testInsertOneElement() {
+    	LinkedMinHeap<Integer> heap = new LinkedMinHeap<Integer>();
+        heap.insert(0);
+        
+        assertEquals(1,heap.size());
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

@@ -73,7 +73,9 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	/**
 	 * Default constructor.
 	 */
-	public LinkedMinHeap() {}
+	public LinkedMinHeap() {
+		root = null;
+	}
 
 	/**
 	 * Second constructor initializes {@code this} with the provided element.
@@ -135,14 +137,21 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 
 	@Override
 	public int size() {
-		throw new UnimplementedMethodException();
+		if (root == null) {
+			return 0;
+		}
+		return root.size;
 	}
 
 
 	@Override
 	public void insert(T element) {
-		throw new UnimplementedMethodException();
+		if (isEmpty()) {
+			root = new MinHeapNode(element,1);
+		}
 	}
+	
+	
 
 	@Override
 	public T getMin() throws EmptyHeapException {		// DO *NOT* ERASE THE "THROWS" DECLARATION!
