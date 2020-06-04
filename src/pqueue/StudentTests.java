@@ -4,6 +4,7 @@ import org.junit.Test;
 import pqueue.exceptions.InvalidCapacityException;
 import pqueue.exceptions.InvalidPriorityException;
 import pqueue.heaps.ArrayMinHeap;
+import pqueue.heaps.LinkedMinHeap;
 import pqueue.heaps.MinHeap;
 import pqueue.priorityqueues.EmptyPriorityQueueException;
 import pqueue.priorityqueues.LinearPriorityQueue;
@@ -82,4 +83,11 @@ public class StudentTests {
     /* ******************************************************************************************************** */
     /* ********************** YOU SHOULD ADD TO THESE UNIT TESTS BELOW. *************************************** */
     /* ******************************************************************************************************** */
+
+    @Test
+    public void testLinkedminHeapisEmpty() {
+        LinkedMinHeap<Integer> heap = new LinkedMinHeap<Integer>();
+
+        assertTrue(heap.isEmpty());
+    }
 }
