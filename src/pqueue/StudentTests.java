@@ -87,7 +87,12 @@ public class StudentTests {
     @Test
     public void testLinkedminHeapisEmpty() {
         LinkedMinHeap<Integer> heap = new LinkedMinHeap<Integer>();
-
+        
         assertTrue(heap.isEmpty());
+    }
+    
+    @Test
+    public void testing123() {
+    	assertTrue(true);
     }
 }
