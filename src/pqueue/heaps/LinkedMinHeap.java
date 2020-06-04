@@ -34,11 +34,17 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
  	 * ********************************************************************* */
 	private class MinHeapNode {
 		private T data;
+		private int size;
 		private MinHeapNode lChild, rChild;
 
-        /* *******************************************************************
-         * Write any further data elements or methods for MinHeapNode here...*
-         ********************************************************************* */
+		/* *******************************************************************
+		 * Write any further data elements or methods for MinHeapNode here...*
+		 ********************************************************************* */
+
+		public MinHeapNode(T data, int size) {
+			this.data = data;
+			this.size = size;
+		}
 
 
 	}
