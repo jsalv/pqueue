@@ -1,5 +1,7 @@
 package pqueue.heaps; // ******* <---  DO NOT ERASE THIS LINE!!!! *******
 
+import java.util.ArrayList;
+
 /* *****************************************************************************************
  * THE FOLLOWING IMPORT IS NECESSARY FOR THE ITERATOR() METHOD'S SIGNATURE. FOR THIS
  * REASON, YOU SHOULD NOT ERASE IT! YOUR CODE WILL BE UNCOMPILABLE IF YOU DO!
@@ -34,19 +36,15 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
  	 * ********************************************************************* */
 	private class MinHeapNode {
 		private T data;
-		private int size;
 		private MinHeapNode lChild, rChild;
 
 		/* *******************************************************************
 		 * Write any further data elements or methods for MinHeapNode here...*
 		 ********************************************************************* */
 
-		public MinHeapNode(T data, int size) {
+		public MinHeapNode(T data) {
 			this.data = data;
-			this.size = size;
 		}
-
-
 	}
 
 	/* *********************************
@@ -61,8 +59,31 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
     /* *********************************************************************************** *
      * Write any further private data elements or private methods for LinkedMinHeap here...*
      * *************************************************************************************/
-
-
+	private int size;
+	private int index = 0;
+	
+	/* Helper methods for insert: */
+	private MinHeapNode build(T newElt, MinHeapNode rt) {	
+		if (rt == null) {
+			size++;
+			return new MinHeapNode(newElt);
+		} else if (rt.lChild != null && rt.rChild != null)
+			build(newElt,rt.lChild);
+		else if (rt.lChild == null)
+			rt.lChild = build(newElt,rt.lChild);		
+		else if (rt.lChild != null && rt.rChild == null)
+			rt.rChild = build(newElt,rt.rChild);
+		return rt;
+	}
+	
+	private void inOrder(MinHeapNode n,ArrayList<T> list) {
+		if (n.lChild != null)
+			inOrder(n.lChild, list);
+		list.add(n.data);
+		if (n.rChild != null)
+			inOrder(n.rChild, list);
+	}
+	
 
 
 
@@ -75,6 +96,7 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	 */
 	public LinkedMinHeap() {
 		root = null;
+		size = 0;
 	}
 
 	/**
@@ -83,7 +105,7 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	 * @param rootElement the data to create the root with.
 	 */
 	public LinkedMinHeap(T rootElement) {
-		root = new MinHeapNode(rootElement,1);
+		root = new MinHeapNode(rootElement);
 		root.lChild = null;
 		root.rChild = null;
 	}
@@ -137,18 +159,59 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 
 	@Override
 	public int size() {
-		if (root == null) {
-			return 0;
-		}
-		return root.size;
+		return size;
 	}
-
 
 	@Override
 	public void insert(T element) {
 		if (isEmpty()) {
-			root = new MinHeapNode(element,1);
+			root = new MinHeapNode(element);
+			size = 1;
+		} else {
+			root = build(element,root);
+			if (size > 1)
+				root = sort(root);
 		}
+	}
+	
+	// helper
+	public T getRootData() {
+		return root.data;
+	}
+	
+	
+	private MinHeapNode sort(MinHeapNode rt) {
+		MinHeapNode curr = rt;
+		// Case 1: lChild is not null, rChild is null
+		// if root is less than lChild, return root
+		// else switch values
+		if (curr.lChild != null && curr.rChild == null) {
+			if (curr.data.compareTo(curr.lChild.data) < 0) {
+				return curr;
+			} else {
+				T temp = curr.data;
+				curr.data = curr.lChild.data;
+				curr.lChild.data = temp;
+			}
+		} 
+		// Case 2: both children are not null
+		else if (curr.lChild != null && curr.rChild != null) {
+			if ((curr.data.compareTo(curr.lChild.data) < 0) &&
+					(curr.data.compareTo(curr.rChild.data) < 0)) {
+				return curr;
+			} else {
+				if (curr.lChild.data.compareTo(curr.rChild.data) < 0) {
+					T temp = curr.data;
+					curr.data = curr.lChild.data;
+					curr.lChild.data = temp;
+				} else {
+					T temp = curr.data;
+					curr.data = curr.rChild.data;
+					curr.rChild.data = temp;
+				}
+			}
+		}	
+		return rt;
 	}
 	
 	
@@ -165,7 +228,81 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-		throw new UnimplementedMethodException();
-	}
+		ArrayList<T> elementList = new ArrayList<T>();
+		inOrder(root,elementList);
 
+		return new Iterator<T>() {			
+			@Override
+			public boolean hasNext() {
+				return elementList.isEmpty();
+			}
+
+			@Override
+			public T next() {
+				return elementList.get(index++);
+			}
+		};
+	}
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
+
+
+
