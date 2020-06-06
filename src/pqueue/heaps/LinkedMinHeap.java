@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import pqueue.exceptions.UnimplementedMethodException;
+import pqueue.trees.EmptyTreeException;
 
 /**
  * <p>A {@link LinkedMinHeap} is a tree (specifically, a <b>complete</b> binary tree) where every node is
@@ -63,20 +64,70 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	private int index = 0;
 	
 	/* Helper methods for insert: */
-	private MinHeapNode build(T newElt, MinHeapNode rt) {	
+	private MinHeapNode build(T newElt, MinHeapNode rt) {
+		
 		if (rt == null) {
 			size++;
 			return new MinHeapNode(newElt);
-		} else if (rt.lChild != null && rt.rChild != null)
-			build(newElt,rt.lChild);
-		else if (rt.lChild == null)
-			rt.lChild = build(newElt,rt.lChild);		
-		else if (rt.lChild != null && rt.rChild == null)
+		} 
+		else if (rt.lChild != null && rt.rChild != null) {
+			int balanceOfLChild = balance(rt.lChild);
+			int balanceOfRChild = balance(rt.rChild);
+			int lHeight = height(rt.lChild);
+			int rHeight = height(rt.rChild);
+			
+			if (lHeight == rHeight && (balanceOfRChild == 0)) {
+				build(newElt,rt.lChild);
+			} else if ((lHeight != rHeight) && (balanceOfLChild != 0)) {
+				build(newElt,rt.lChild);
+			}
+			else {
+				build(newElt,rt.rChild);
+			}
+		}
+		else if (rt.lChild == null) {
+			rt.lChild = build(newElt,rt.lChild);
+		}
+		else if (rt.lChild != null && rt.rChild == null) {
 			rt.rChild = build(newElt,rt.rChild);
+		} 
+		/*
+		if (rt == null) {
+			size++;
+			return new MinHeapNode(newElt);
+		}
+		if (rt.lChild == null) {
+			rt.lChild = build(newElt,rt.lChild);
+			return rt;
+		}
+		if (rt.rChild == null) {
+			rt.rChild = build(newElt,rt.rChild);
+			return rt;
+		}*/
 		return rt;
 	}
 	
-	private void inOrder(MinHeapNode n,ArrayList<T> list) {
+	private int height(MinHeapNode rt) {
+		if (rt == null) {
+			return -1;
+		} else {
+			int lHeight = height(rt.lChild);
+			int rHeight = height(rt.rChild);
+			
+			if (rHeight > lHeight)
+				return rHeight + 1;
+			else
+				return lHeight + 1;
+		}
+		
+	}
+	
+	private int balance(MinHeapNode rt) {
+		return height(rt.lChild) - height(rt.rChild);
+	}
+	
+	
+	private void inOrder(MinHeapNode n,ArrayList<T> list) {	
 		if (n.lChild != null)
 			inOrder(n.lChild, list);
 		list.add(n.data);
@@ -218,7 +269,9 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 
 	@Override
 	public T getMin() throws EmptyHeapException {		// DO *NOT* ERASE THE "THROWS" DECLARATION!
-		throw new UnimplementedMethodException();
+		if(isEmpty())
+			throw new EmptyHeapException("Min Heap is empty.");
+		return root.data;
 	}
 
 	@Override
@@ -234,7 +287,7 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		return new Iterator<T>() {			
 			@Override
 			public boolean hasNext() {
-				return elementList.isEmpty();
+				return (index != size);
 			}
 
 			@Override
