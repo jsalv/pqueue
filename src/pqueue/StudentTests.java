@@ -4,6 +4,7 @@ import org.junit.Test;
 import pqueue.exceptions.InvalidCapacityException;
 import pqueue.exceptions.InvalidPriorityException;
 import pqueue.heaps.ArrayMinHeap;
+import pqueue.heaps.EmptyHeapException;
 import pqueue.heaps.LinkedMinHeap;
 import pqueue.heaps.MinHeap;
 import pqueue.priorityqueues.EmptyPriorityQueueException;
@@ -107,60 +108,78 @@ public class StudentTests {
     	heap.insert(2);
     	heap.insert(1);
     	heap.insert(0);
-    
-    	int a = heap.iterator().next();
-    	assertEquals("Expected lChild is 2.",2,a);
     	
+
+    
     	int b = heap.iterator().next();
-    	assertEquals("Expected root is 0.",0,b);
+    	assertEquals("Expected lChild is 2.",2,b);
+    	
+    	int a = heap.iterator().next();
+    	assertEquals("Expected root is 0.",0,a);   	
+    	
     	
     	int c = heap.iterator().next();
     	assertEquals("Expected rChild is 1.",1,c);
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    @Test
+    public void testMakeHeap2Levels() {
+    	LinkedMinHeap<Integer> heap = new LinkedMinHeap<Integer>();
+    	
+    	heap.insert(0);
+    	heap.insert(1);
+    	heap.insert(2);
+    	heap.insert(3);
+    	heap.insert(4);
+    	heap.insert(5);
+    	heap.insert(6);
+    	
+    }
+    	
 }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+ 
