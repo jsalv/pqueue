@@ -105,38 +105,106 @@ public class StudentTests {
     @Test
     public void testMakeMinHeap() {
     	LinkedMinHeap<Integer> heap = new LinkedMinHeap<Integer>();
-    	heap.insert(2);
-    	heap.insert(1);
+    	Integer[] a = new Integer[1];
+    	
     	heap.insert(0);
+    	heap.insert(1);
+    	heap.insert(2);
     	
-
-    
-    	int b = heap.iterator().next();
-    	assertEquals("Expected lChild is 2.",2,b);
+    	// Test if lChild and rChild of node 0 is correct.
+    	int lChild_0 = heap.getLChild(0,a,heap.getRoot());
+    	int rChild_0 = heap.getRChild(0,a,heap.getRoot());
     	
-    	int a = heap.iterator().next();
-    	assertEquals("Expected root is 0.",0,a);   	
-    	
-    	
-    	int c = heap.iterator().next();
-    	assertEquals("Expected rChild is 1.",1,c);
+    	assertEquals("Expected left child of 0 is 1.",1,lChild_0);
+    	assertEquals("Expected right child of 0 is 2.",2,rChild_0);
     }
     
     @Test
     public void testMakeHeap2Levels() {
     	LinkedMinHeap<Integer> heap = new LinkedMinHeap<Integer>();
+    	Integer[] a = new Integer[1];
     	
+    	// level 0
     	heap.insert(0);
+    	// level 1
     	heap.insert(1);
     	heap.insert(2);
+    	// level 2
     	heap.insert(3);
     	heap.insert(4);
     	heap.insert(5);
     	heap.insert(6);
+    	// level 3
+    	heap.insert(7);
+    	 	
     	
+    	// Test if lChild and rChild of node 0 is correct.
+    	int lChild_0 = heap.getLChild(0,a,heap.getRoot());
+    	int rChild_0 = heap.getRChild(0,a,heap.getRoot());
+    	
+    	assertEquals("Expected left child of 0 is 1.",1,lChild_0);
+    	assertEquals("Expected right child of 0 is 2.",2,rChild_0);
+    	
+    	// Test if lChild and rChild of node 1 is correct.
+    	int lChild_1 = heap.getLChild(1,a,heap.getRoot());
+    	int rChild_1 = heap.getRChild(1,a,heap.getRoot());
+    	
+    	assertEquals("Expected left child of 1 is 3.",3,lChild_1);
+    	assertEquals("Expected right child of 1 is 4.",4,rChild_1);
+    	
+    	// Test if lChild and rChild of node 2 is correct.
+    	int lChild_2 = heap.getLChild(2,a,heap.getRoot());
+    	int rChild_2 = heap.getRChild(2,a,heap.getRoot());
+    	
+    	assertEquals("Expected left child of 2 is 5.",5,lChild_2);
+    	assertEquals("Expected right child of 2 is 6.",6,rChild_2);
+    	
+    	// Test if lChild of node 3 is correct.
+    	int lChild_3 = heap.getLChild(3,a,heap.getRoot());
+    	
+    	assertEquals("Expected left child of 3 is 7.",7,lChild_3);
+    }
+    
+    @Test
+    public void testDeleteMin() throws EmptyHeapException {
+    	LinkedMinHeap<Integer> heap = new LinkedMinHeap<Integer>();
+    	Integer[] a = new Integer[1];
+    	
+    	heap.insert(0);
+    	heap.insert(1);
+    	heap.insert(2);
+    	
+    	heap.deleteMin();
+    	
+    	int lChild_1 = heap.getLChild(1,a,heap.getRoot());
+    	int heapMin = heap.getMin();
+    	
+    	assertEquals("Expected new minimum is 1.",1,heapMin);
+    	assertEquals("Expected left child of 1 is 2.",2,lChild_1);
+    }
+    
+    @Test
+    public void testCopyConstructor() {
+    	LinkedMinHeap<Integer> heap = new LinkedMinHeap<Integer>();
+    	Integer[] a = new Integer[1];
+    	
+    	heap.insert(0);
+    	heap.insert(1);
+    	heap.insert(2);
+    	
+    	LinkedMinHeap<Integer> heap1 = new LinkedMinHeap<Integer>(heap);
+    	
+    	// Test if lChild and rChild of node 0 is correct.
+    	int lChild_0 = heap.getLChild(0,a,heap.getRoot());
+    	int rChild_0 = heap.getRChild(0,a,heap.getRoot());
+    	
+    	assertEquals("Expected left child of 0 is 1.",1,lChild_0);
+    	assertEquals("Expected right child of 0 is 2.",2,rChild_0);
     }
     	
 }
+
+
     
     
     
