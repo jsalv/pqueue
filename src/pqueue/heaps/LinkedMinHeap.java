@@ -1,6 +1,7 @@
 package pqueue.heaps; // ******* <---  DO NOT ERASE THIS LINE!!!! *******
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /* *****************************************************************************************
  * THE FOLLOWING IMPORT IS NECESSARY FOR THE ITERATOR() METHOD'S SIGNATURE. FOR THIS
@@ -54,9 +55,6 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	 */
 	private MinHeapNode root;
 
-
-
-
     /* *********************************************************************************** *
      * Write any further private data elements or private methods for LinkedMinHeap here...*
      * *************************************************************************************/
@@ -91,19 +89,6 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		else if (rt.lChild != null && rt.rChild == null) {
 			rt.rChild = build(newElt,rt.rChild);
 		} 
-		/*
-		if (rt == null) {
-			size++;
-			return new MinHeapNode(newElt);
-		}
-		if (rt.lChild == null) {
-			rt.lChild = build(newElt,rt.lChild);
-			return rt;
-		}
-		if (rt.rChild == null) {
-			rt.rChild = build(newElt,rt.rChild);
-			return rt;
-		}*/
 		return rt;
 	}
 	
@@ -126,6 +111,53 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		return height(rt.lChild) - height(rt.rChild);
 	}
 	
+	private MinHeapNode deleteHelper(MinHeapNode rt) {
+		if (rt == null) {
+			return rt;
+		} else if (rt.lChild == null) {
+			return null;
+		} else if (rt.rChild == null) {
+			return rt.lChild;
+		} else {
+			rt.data = rt.rChild.data;
+			rt.rChild = deleteHelper(rt.rChild);
+		}
+		return rt;
+	}
+		
+	private MinHeapNode sort(MinHeapNode rt) {
+		MinHeapNode curr = rt;
+		// Case 1: lChild is not null, rChild is null
+		// if root is less than lChild, return root
+		// else switch values
+		if (curr.lChild != null && curr.rChild == null) {
+			if (curr.data.compareTo(curr.lChild.data) < 0) {
+				return curr;
+			} else {
+				T temp = curr.data;
+				curr.data = curr.lChild.data;
+				curr.lChild.data = temp;
+			}
+		} 
+		// Case 2: both children are not null
+		else if (curr.lChild != null && curr.rChild != null) {
+			if ((curr.data.compareTo(curr.lChild.data) < 0) &&
+					(curr.data.compareTo(curr.rChild.data) < 0)) {
+				return curr;
+			} else {
+				if (curr.lChild.data.compareTo(curr.rChild.data) < 0) {
+					T temp = curr.data;
+					curr.data = curr.lChild.data;
+					curr.lChild.data = temp;
+				} else {
+					T temp = curr.data;
+					curr.data = curr.rChild.data;
+					curr.rChild.data = temp;
+				}
+			}
+		}	
+		return rt;
+	}
 	
 	private void inOrder(MinHeapNode n,ArrayList<T> list) {	
 		if (n.lChild != null)
@@ -170,7 +202,9 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	 * @param other The {@link MinHeap} to copy the elements from.
 	 */
 	public LinkedMinHeap(MinHeap<T> other) {
-		throw new UnimplementedMethodException();
+		for(T item : other) {
+			insert(item);
+		}
 	}
 
 
@@ -224,48 +258,6 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 				root = sort(root);
 		}
 	}
-	
-	// helper
-	public T getRootData() {
-		return root.data;
-	}
-	
-	
-	private MinHeapNode sort(MinHeapNode rt) {
-		MinHeapNode curr = rt;
-		// Case 1: lChild is not null, rChild is null
-		// if root is less than lChild, return root
-		// else switch values
-		if (curr.lChild != null && curr.rChild == null) {
-			if (curr.data.compareTo(curr.lChild.data) < 0) {
-				return curr;
-			} else {
-				T temp = curr.data;
-				curr.data = curr.lChild.data;
-				curr.lChild.data = temp;
-			}
-		} 
-		// Case 2: both children are not null
-		else if (curr.lChild != null && curr.rChild != null) {
-			if ((curr.data.compareTo(curr.lChild.data) < 0) &&
-					(curr.data.compareTo(curr.rChild.data) < 0)) {
-				return curr;
-			} else {
-				if (curr.lChild.data.compareTo(curr.rChild.data) < 0) {
-					T temp = curr.data;
-					curr.data = curr.lChild.data;
-					curr.lChild.data = temp;
-				} else {
-					T temp = curr.data;
-					curr.data = curr.rChild.data;
-					curr.rChild.data = temp;
-				}
-			}
-		}	
-		return rt;
-	}
-	
-	
 
 	@Override
 	public T getMin() throws EmptyHeapException {		// DO *NOT* ERASE THE "THROWS" DECLARATION!
@@ -276,14 +268,23 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 
 	@Override
 	public T deleteMin() throws EmptyHeapException {    // DO *NOT* ERASE THE "THROWS" DECLARATION!
-		throw new UnimplementedMethodException();
+		if(isEmpty()) {
+			throw new EmptyHeapException("Min Heap is empty.");
+		} else {
+			T min = getMin();		
+			root = deleteHelper(root);
+			root = sort(root);
+			
+			return min;
+		}
 	}
 
 	@Override
 	public Iterator<T> iterator() {
 		ArrayList<T> elementList = new ArrayList<T>();
 		inOrder(root,elementList);
-
+		Collections.sort(elementList);
+		
 		return new Iterator<T>() {			
 			@Override
 			public boolean hasNext() {
@@ -297,63 +298,40 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		};
 	}
 	
+	// Additional public methods to enhance testing
 	
-
+	// Method assumes rt parameter is not null
+	public T getLChild(T target,T[] arr,MinHeapNode rt) {
+		try {
+			if (rt.lChild != null)
+				getLChild(target,arr,rt.lChild);
+			if (rt.data == target) 
+				arr[0] = rt.lChild.data;
+			if (rt.rChild != null)
+				getLChild(target,arr,rt.rChild);
+		} catch(NullPointerException e) {
+			System.out.println("lChild nonexistent for node " + target);
+		}		
+		return arr[0];
+	}
 	
+	public T getRChild(T target,T[] arr,MinHeapNode rt) {
+		try {
+			if (rt.lChild != null)
+				getRChild(target,arr,rt.lChild);
+			if (rt.data == target) 
+				arr[0] = rt.rChild.data;
+			if (rt.rChild != null)
+				getRChild(target,arr,rt.rChild);
+		} catch(NullPointerException e) {
+			System.out.println("rChild nonexistent for node " + target);
+		}
+		return arr[0];
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public MinHeapNode getRoot() {
+		return root;
+	}
 	
 }
 
