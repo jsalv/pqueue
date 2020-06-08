@@ -53,6 +53,18 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 			temp[i] = data[i];
 		data = temp;
 	}
+	
+	private int getLChildPos(int index) {
+		return (2*index) + 1;
+	}
+	
+	private int getRChildPos(int index) {
+		return (2*index) + 2;
+	}
+	
+	private boolean isLeaf(int index) {
+		return (index <= current_size && index >= current_size/2);
+	}
 
 	/* *********************************************************************************************************
 	 * Implement the following public methods. You should erase the throwings of UnimplementedMethodExceptions.*
@@ -115,15 +127,43 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		data[current_size++] = element;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public T deleteMin() throws EmptyHeapException { // DO *NOT* ERASE THE "THROWS" DECLARATION!
 		if (isEmpty()) {
 			throw new EmptyHeapException("Heap is empty!");
 		}
 		T min = getMin();
-		
-		
+
+		data[0] = data[current_size-1];
+		heapify(0);
+		data[current_size-1] = null;
+		current_size--;
+
 		return min;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void heapify(int pos) {
+		if (isLeaf(pos) == false) {
+			T curr = (T)data[pos];
+			T lChild = (T)data[getLChildPos(pos)];
+			T rChild = (T)data[getRChildPos(pos)];
+			
+			if (curr.compareTo(lChild) > 0 || curr.compareTo(rChild) > 0) {
+				if (lChild.compareTo(rChild) < 0) {
+					T temp = (T) data[pos];
+					data[pos] = lChild;
+					data[getLChildPos(pos)] = temp;
+					heapify(getLChildPos(pos));
+				} else {
+					T temp = (T) data[pos];
+					data[pos] = rChild;
+					data[getRChildPos(pos)] = temp;
+					heapify(getRChildPos(pos));
+				}
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
