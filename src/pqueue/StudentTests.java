@@ -231,12 +231,22 @@ public class StudentTests {
     	arrHeap1.insert(20);
     	arrHeap1.insert(30);
     	
-    	assertEquals("Expected size is 3.",3,arrHeap0.size());
+    	assertEquals("Expected size is 3.",3,arrHeap1.size());
     }
     
     @Test
-    public void testDeleteMinArrayMinHeap() {
+    public void testDeleteMinArrayMinHeap() throws EmptyHeapException {
+    	ArrayMinHeap<Integer> arrHeap1 = new ArrayMinHeap<Integer>(10);
+    	int min = 0;
     	
+    	arrHeap1.insert(20);
+    	arrHeap1.insert(30);
+    	
+    	arrHeap1.deleteMin();
+    	min = arrHeap1.getMin();
+    	
+    	assertEquals("Expected size is 2.",2,arrHeap1.size());
+    	assertEquals("Expected current min value is 20.",20,min);
     }
     	
 }
