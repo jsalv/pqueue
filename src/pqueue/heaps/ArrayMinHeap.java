@@ -43,8 +43,16 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	/* *********************************************************************************** *
 	 * Write any further private data elements or private methods for LinkedMinHeap here...*
 	 * *************************************************************************************/
-
-
+	// variables
+	private int current_size;
+	
+	// methods
+	private void resize(int newCapacity) {
+		Object[] temp = new Object[newCapacity];
+		for (int i = 0; i < current_size; i++)
+			temp[i] = data[i];
+		data = temp;
+	}
 
 	/* *********************************************************************************************************
 	 * Implement the following public methods. You should erase the throwings of UnimplementedMethodExceptions.*
@@ -55,7 +63,8 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	 * capacity you can choose.
 	 */
 	public ArrayMinHeap(){
-		throw new UnimplementedMethodException();
+		current_size = 0;
+		data = new Object[current_size + 1];
 	}
 
 	/**
@@ -63,7 +72,9 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	 *  @param rootElement the element to create the root with.
 	 */
 	public ArrayMinHeap(T rootElement){
-		throw new UnimplementedMethodException();
+		current_size = 1;
+		data = new Object[current_size + 1];
+		data[0] = rootElement;
 	}
 
 	/**
@@ -97,27 +108,38 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 
 	@Override
 	public void insert(T element) {
-		throw new UnimplementedMethodException();
+		if (current_size == data.length) {
+			// recurrent_size here
+			resize(2*data.length);
+		}
+		data[current_size++] = element;
 	}
 
 	@Override
 	public T deleteMin() throws EmptyHeapException { // DO *NOT* ERASE THE "THROWS" DECLARATION!
-		throw new UnimplementedMethodException();
+		if (isEmpty()) {
+			throw new EmptyHeapException("Heap is empty!");
+		}
+		T min = getMin();
+		
+		
+		return min;
 	}
 
-		@Override
+	@SuppressWarnings("unchecked")
+	@Override
 	public T getMin() throws EmptyHeapException {	// DO *NOT* ERASE THE "THROWS" DECLARATION!
-		throw new UnimplementedMethodException();
+		return (T) data[0];
 	}
 
 	@Override
 	public int size() {
-		throw new UnimplementedMethodException();
+		return current_size;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		throw new UnimplementedMethodException();
+		return (current_size == 0);
 	}
 
 	/**
