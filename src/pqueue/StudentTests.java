@@ -201,6 +201,43 @@ public class StudentTests {
     	assertEquals("Expected left child of 0 is 1.",1,lChild_0);
     	assertEquals("Expected right child of 0 is 2.",2,rChild_0);
     }
+    
+    @Test
+    public void testMakeArrayMinHeap() {
+    	// Initialize empty array
+    	ArrayMinHeap<Integer> arrHeap0 = new ArrayMinHeap<Integer>();
+    	
+    	assertTrue(arrHeap0.isEmpty());
+    	
+    	// Initialize nonempty array
+    	ArrayMinHeap<Integer> arrHeap1 = new ArrayMinHeap<Integer>(1);
+    	
+    	assertFalse(arrHeap1.isEmpty());
+    }
+    
+    @Test
+    public void testInsertArrayMinHeap() {
+    	// Insert first element into empty heap
+    	ArrayMinHeap<Integer> arrHeap0 = new ArrayMinHeap<Integer>();
+    	arrHeap0.insert(0);
+    	
+    	assertEquals("Expected size is 1.",1,arrHeap0.size());  	
+    	// Insert second element into empty heap
+    	arrHeap0.insert(1);
+    	
+    	assertEquals("Expected size is 2.",2,arrHeap0.size());	
+    	// Insert elements into nonempty heap
+    	ArrayMinHeap<Integer> arrHeap1 = new ArrayMinHeap<Integer>(10);
+    	arrHeap1.insert(20);
+    	arrHeap1.insert(30);
+    	
+    	assertEquals("Expected size is 3.",3,arrHeap0.size());
+    }
+    
+    @Test
+    public void testDeleteMinArrayMinHeap() {
+    	
+    }
     	
 }
 
