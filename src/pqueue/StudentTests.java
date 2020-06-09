@@ -3,6 +3,7 @@ package pqueue;
 import org.junit.Test;
 import pqueue.exceptions.InvalidCapacityException;
 import pqueue.exceptions.InvalidPriorityException;
+import pqueue.fifoqueues.LinearArrayFIFOQueue;
 import pqueue.heaps.ArrayMinHeap;
 import pqueue.heaps.EmptyHeapException;
 import pqueue.heaps.LinkedMinHeap;
@@ -14,6 +15,7 @@ import pqueue.priorityqueues.PriorityQueue;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -247,6 +249,53 @@ public class StudentTests {
     	
     	assertEquals("Expected size is 2.",2,arrHeap1.size());
     	assertEquals("Expected current min value is 20.",20,min);
+    }
+    
+    @Test
+    public void testArrayMinHeapIterator() {
+    	ArrayMinHeap<Integer> arrHeap1 = new ArrayMinHeap<Integer>(30);
+    	arrHeap1.insert(20);
+    	arrHeap1.insert(10);
+    	
+    	int x = arrHeap1.iterator().next();
+    	assertEquals(10,x);
+    	
+    	int y = arrHeap1.iterator().next();
+    	assertEquals(20,y);
+    	
+    	int z = arrHeap1.iterator().next();
+    	assertEquals(30,z);
+    }
+    
+    @Test
+    public void testMakeLinearPriorityQueue() throws InvalidPriorityException {
+    	LinearPriorityQueue<Integer> queue = new LinearPriorityQueue<Integer>();
+    	Iterator<Integer> itr = queue.iterator();
+    	
+    	queue.enqueue(1,1);
+    	queue.enqueue(3,2);
+    	queue.enqueue(4,3);
+    	queue.enqueue(2,2);
+    	
+    	int a = itr.next();
+    	assertEquals(1,a);
+    	
+    	int b = itr.next();
+    	assertEquals(2,b);
+    }
+    
+    @Test
+    public void testDequeue() throws InvalidPriorityException, EmptyPriorityQueueException {
+    	LinearPriorityQueue<Integer> queue = new LinearPriorityQueue<Integer>();
+    	
+    	queue.enqueue(1,1);
+    	queue.enqueue(3,2);
+    	queue.enqueue(4,3);
+    	queue.enqueue(2,2);
+    	queue.dequeue();
+    	
+    	int x = queue.getFirst();
+    	assertEquals("Expected first element is currently 2.",2,x);
     }
     	
 }
