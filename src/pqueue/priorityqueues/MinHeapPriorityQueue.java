@@ -11,8 +11,11 @@ package pqueue.priorityqueues; // ******* <---  DO NOT ERASE THIS LINE!!!! *****
  ** ********************************************************************************* */
 
 import pqueue.exceptions.*;
+import pqueue.heaps.ArrayMinHeap;
+import pqueue.heaps.EmptyHeapException;
 import pqueue.heaps.MinHeap;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 /**
  * <p>{@link MinHeapPriorityQueue} is a {@link PriorityQueue} implemented using a {@link MinHeap}.</p>
@@ -21,7 +24,7 @@ import java.util.Iterator;
  * related to this class, your implementation <b>must</b> use <b>whichever</b> {@link MinHeap} implementation
  * among the two that you should have implemented you choose!</p>
  *
- * @author  ---- YOUR NAME HERE ----
+ * @author  ---- Jemimah E.P. Salvacion ----
  *
  * @param <T> The Type held by the container.
  *
@@ -29,15 +32,25 @@ import java.util.Iterator;
  * @see MinHeap
  * @see PriorityQueue
  */
-public class MinHeapPriorityQueue<T> implements PriorityQueue<T>{
+public class MinHeapPriorityQueue<T extends Comparable<T>> implements PriorityQueue<T>{
 
+	/* New class to store data and priority */
+	private class PQueueElement {
+		private T data;
+		private int priority;
+		
+		public PQueueElement(T dataInput, int priorityInput) {
+			data = dataInput;
+			priority = priorityInput;
+		}
+	}
+	
 	/* ***********************************************************************************
-	 * Write any private data elements or private methods for MinHeapPriorityQueue here...*
+	 * Write any pr6ivate data elements or private methods for MinHeapPriorityQueue here...*
 	 * ***********************************************************************************/
-
-
-
-
+	private MinHeap<T> heap;
+	private Object[] eltData;
+	private int arrdex;
 
 	/* *********************************************************************************************************
 	 * Implement the following public methods. You should erase the throwings of UnimplementedMethodExceptions.*
@@ -46,38 +59,88 @@ public class MinHeapPriorityQueue<T> implements PriorityQueue<T>{
 	 * Simple default constructor.
 	 */
 	public MinHeapPriorityQueue(){
-		throw new UnimplementedMethodException();
+		heap = new ArrayMinHeap<T>();
+		arrdex = 0;
+		eltData = new Object[10];
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void enqueue(T element, int priority) throws InvalidPriorityException {	// DO *NOT* ERASE THE "THROWS" DECLARATION!
-		throw new UnimplementedMethodException();
+		if (priority < 1) {
+			throw new InvalidPriorityException("Priority must be >= 1.");
+		}
+		if (size() == 0) {
+			PQueueElement elt = new PQueueElement(element,priority);
+			eltData[arrdex++] = elt;
+			heap.insert(element);
+			return;
+		}
+		PQueueElement newElt = new PQueueElement(element,priority);
+		int i = 0;
+		while (i < eltData.length) {
+			PQueueElement curr = (MinHeapPriorityQueue<T>.PQueueElement) eltData[i];
+			i++;
+			if (curr.priority > priority) {
+				int tempDex = i;
+				eltData[--tempDex] = newElt;
+				eltData[i] = curr;
+				break;
+			}
+		}
+		heap = new ArrayMinHeap<T>();
+		for (int j = 0; j < eltData.length; j++) {
+			PQueueElement curr = (MinHeapPriorityQueue<T>.PQueueElement) eltData[j];
+			if (curr != null)
+				heap.insert(curr.data);
+			else
+				break;
+		}
+		
+
 	}
 
 	@Override
-	public T dequeue() throws EmptyPriorityQueueException {		// DO *NOT* ERASE THE "THROWS" DECLARATION!
-		throw new UnimplementedMethodException();
+	public T dequeue() throws EmptyPriorityQueueException {		// DO *NOT* ERASE THE "THROWS" DECLARATION!		
+		T res = null;
+		if (size() == 0)
+			throw new EmptyPriorityQueueException("Empty priority queue.");
+		try {
+			res = heap.deleteMin();
+		} catch (EmptyHeapException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+		
+		return res;
 	}
 
 	@Override
 	public T getFirst() throws EmptyPriorityQueueException {	// DO *NOT* ERASE THE "THROWS" DECLARATION!
-		throw new UnimplementedMethodException();
+		T first = null;
+		try {
+			first = (T) heap.getMin();
+		} catch (EmptyHeapException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return first;
 	}
 
 	@Override
 	public int size() {
-		throw new UnimplementedMethodException();
+		return heap.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		throw new UnimplementedMethodException();
+		return heap.isEmpty();
 	}
 
 
 	@Override
 	public Iterator<T> iterator() {
-		throw new UnimplementedMethodException();
+		return heap.iterator();
 	}
 
 }
