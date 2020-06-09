@@ -8,7 +8,9 @@ package pqueue.priorityqueues; // ******* <---  DO NOT ERASE THIS LINE!!!! *****
 
 import demos.GenericArrays;
 import pqueue.exceptions.*;
+import pqueue.fifoqueues.EmptyFIFOQueueException;
 import pqueue.fifoqueues.FIFOQueue;
+import pqueue.fifoqueues.LinearArrayFIFOQueue;
 import pqueue.heaps.ArrayMinHeap;
 
 import java.util.*;
@@ -37,10 +39,10 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 	/* ***********************************************************************************
 	 * Write any private data elements or private methods for LinearPriorityQueue here...*
 	 * ***********************************************************************************/
-
-
-
-
+	private ArrayList<T> data;
+	private int capacity;
+	private int size;
+	private int index = 0;
 
 	/* *********************************************************************************************************
 	 * Implement the following public methods. You should erase the throwings of UnimplementedMethodExceptions.*
@@ -52,7 +54,9 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 	 * underlying element structure that you will choose to use to implement this class.
 	 */
 	public LinearPriorityQueue(){
-		throw new UnimplementedMethodException();
+		data = new ArrayList<T>();
+		capacity = 10;
+		size = 0;
 	}
 
 	/**
@@ -64,38 +68,90 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 	 * @throws InvalidCapacityException if the capacity provided is less than 1.
 	 */
 	public LinearPriorityQueue(int capacity) throws InvalidCapacityException{	// DO *NOT* ERASE THE "THROWS" DECLARATION!
-		throw new UnimplementedMethodException();
+		data = new ArrayList<T>();
+		this.capacity = capacity;
+		size = 0;
 	}
 
 	@Override
 	public void enqueue(T element, int priority) throws InvalidPriorityException{	// DO *NOT* ERASE THE "THROWS" DECLARATION!
-		throw new UnimplementedMethodException();
+		if (priority < 1) {
+			throw new InvalidPriorityException("Priority input has to be >= 1.");
+		}else if (size == 0) {
+			data.add(element);
+		}else if (priority <= size+1 && size <= capacity) {
+			if (priority == 1) {
+				ArrayList<T> temp = new ArrayList<T>();
+				temp.add(element);
+				for (T item : data) {
+					temp.add(item);
+				}
+				data.clear();
+				for (T item : temp)
+					data.add(item);
+			} else if (priority == size+1){
+				data.add(element);
+			} else {
+				ArrayList<T> temp = new ArrayList<T>();				
+				int count = 1;
+				
+				for (T item : data) {
+					if (count == priority) {
+						temp.add(element);
+					}
+					temp.add(item);
+					count++;
+				}
+				data.clear();
+				for (T item : temp)
+					data.add(item);
+			}
+		}
+		size++;
+		capacity--;
 	}
 
 	@Override
 	public T dequeue() throws EmptyPriorityQueueException { 	// DO *NOT* ERASE THE "THROWS" DECLARATION!
-		throw new UnimplementedMethodException();
+		T first = data.get(0);	
+		data.remove(0);
+		
+		return first;
 	}
 
 	@Override
 	public T getFirst() throws EmptyPriorityQueueException {	// DO *NOT* ERASE THE "THROWS" DECLARATION!
-		throw new UnimplementedMethodException();
+		if (isEmpty()) {
+			throw new EmptyPriorityQueueException("Priority Queue is empty.");
+		}
+		
+		return data.get(0);
 	}
 
 	@Override
 	public int size() {
-		throw new UnimplementedMethodException();
+		return size;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		throw new UnimplementedMethodException();
+		return (data.size() == 0);
 	}
 
 
 	@Override
 	public Iterator<T> iterator() {
-		throw new UnimplementedMethodException();
+		return new Iterator<T>() {			
+			@Override
+			public boolean hasNext() {
+				return (data.get(index+1)!=null);
+			}
+
+			@Override
+			public T next() {
+				return data.get(index++);
+			}
+		};
 	}
 
 }
