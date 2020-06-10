@@ -16,6 +16,7 @@ import pqueue.heaps.EmptyHeapException;
 import pqueue.heaps.MinHeap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 /**
  * <p>{@link MinHeapPriorityQueue} is a {@link PriorityQueue} implemented using a {@link MinHeap}.</p>
@@ -47,10 +48,10 @@ public class MinHeapPriorityQueue<T> implements PriorityQueue<T>{
 	/* ***********************************************************************************
 	 * Write any private data elements or private methods for MinHeapPriorityQueue here...*
 	 * ***********************************************************************************/
-	MinHeap<Integer> heap;
+	private MinHeap<Integer> heap;
 	private Object[] eltData;
-	private int itrIndex;
 	private int curr_size;
+	private ArrayList<T> itrList;
 	
 	private void resize(int newCapacity) {
 		Object[] temp = new Object[newCapacity];
@@ -70,6 +71,7 @@ public class MinHeapPriorityQueue<T> implements PriorityQueue<T>{
 		heap = new ArrayMinHeap<Integer>();
 		curr_size = 0;
 		eltData = new Object[curr_size+1];
+		itrList = new ArrayList<T>();
 	}
 
 	@Override
@@ -102,7 +104,12 @@ public class MinHeapPriorityQueue<T> implements PriorityQueue<T>{
 				i--;
 				j--;
 			}								
-		}				
+		}
+		itrList.clear();
+		for (int i = 0; i < curr_size; i++) {
+			PQueueElement curr = (MinHeapPriorityQueue<T>.PQueueElement) eltData[i];
+			itrList.add((T) curr.data);
+		}
 	}
 
 	@Override
@@ -122,6 +129,12 @@ public class MinHeapPriorityQueue<T> implements PriorityQueue<T>{
 		
 		eltData[--curr_size] = null;		
 		PQueueElement curr = (MinHeapPriorityQueue<T>.PQueueElement) eltData[0];
+		
+		itrList.clear();
+		for (int k = 0; k < curr_size; k++) {
+			PQueueElement temp = (MinHeapPriorityQueue<T>.PQueueElement) eltData[k];
+			itrList.remove((T) temp.data);
+		}
 		
 		return curr.data;
 	}
@@ -150,20 +163,6 @@ public class MinHeapPriorityQueue<T> implements PriorityQueue<T>{
 
 	@Override
 	public Iterator<T> iterator() {
-		return new Iterator<T>() {
-
-			@Override
-			public boolean hasNext() {
-				return (itrIndex < curr_size);
-			}
-
-			@Override
-			public T next() {
-				PQueueElement elt = (MinHeapPriorityQueue<T>.PQueueElement) eltData[itrIndex++];
-				return (elt.data);
-			}
-			
-		};
+		return itrList.iterator();
 	}
-
 }

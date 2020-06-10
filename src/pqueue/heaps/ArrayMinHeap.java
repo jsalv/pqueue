@@ -7,7 +7,10 @@ package pqueue.heaps; // ******* <---  DO NOT ERASE THIS LINE!!!! *******
 
 import pqueue.exceptions.UnimplementedMethodException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 
@@ -22,7 +25,7 @@ import java.util.Iterator;
  * contiguous storage!). or a raw Java array. We provide an array for you to start with, but if you prefer, you can switch it to a
  * {@link java.util.Collection} as mentioned above. </p>
  *
- * @author -- YOUR NAME HERE ---
+ * @author Jemimah E.P. Salvacion
  *
  * @see MinHeap
  * @see LinkedMinHeap
@@ -46,7 +49,7 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	 * *************************************************************************************/
 	// variables
 	private int current_size;
-	private int itr_index = 0;
+	private ArrayList<T> itrList;
 	
 	// methods
 	private void resize(int newCapacity) {
@@ -67,6 +70,39 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	private boolean isLeaf(int index) {
 		return (index <= current_size && index >= current_size/2);
 	}
+	
+	@SuppressWarnings("unchecked")
+	private void heapify(int pos) {
+		if (!isLeaf(pos)) {
+			T curr = (T)data[pos];
+			T lChild = null;
+			T rChild = null;
+			if (data[getLChildPos(pos)] != null) {
+				lChild = (T)data[getLChildPos(pos)];
+				if (getRChildPos(pos) < current_size) {	
+					rChild = (T)data[getRChildPos(pos)];			
+					if (curr.compareTo(lChild) > 0 || curr.compareTo(rChild) > 0) {
+						if (lChild.compareTo(rChild) < 0) {
+							T temp = (T) data[pos];
+							data[pos] = lChild;
+							data[getLChildPos(pos)] = temp;
+							heapify(getLChildPos(pos));
+						} else {
+							T temp = (T) data[pos];
+							data[pos] = rChild;
+							data[getRChildPos(pos)] = temp;
+							heapify(getRChildPos(pos));
+						}
+					}
+				} else 
+				if (curr.compareTo(lChild) > 0) { 
+					T temp = (T) data[pos];
+					data[pos] = lChild;
+					data[getLChildPos(pos)] = temp;
+				}			
+			} 	
+		}
+	}
 
 	/* *********************************************************************************************************
 	 * Implement the following public methods. You should erase the throwings of UnimplementedMethodExceptions.*
@@ -79,6 +115,7 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	public ArrayMinHeap(){
 		current_size = 0;
 		data = new Object[current_size + 1];
+		itrList = new ArrayList<T>();
 	}
 
 	/**
@@ -89,6 +126,8 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		current_size = 1;
 		data = new Object[current_size + 1];
 		data[0] = rootElement;
+		itrList = new ArrayList<T>();
+		itrList.add(rootElement);
 	}
 
 	/**
@@ -125,59 +164,36 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	@Override
 	public void insert(T element) {
 		if (current_size == data.length) {
-			// recurrent_size here
 			resize(2*data.length);
 		}
+		
 		data[current_size++] = element;
 		heapify(0);
+		
+		itrList.add(element);
+		Collections.sort(itrList);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public T deleteMin() throws EmptyHeapException { // DO *NOT* ERASE THE "THROWS" DECLARATION!
 		if (isEmpty()) {
 			throw new EmptyHeapException("Heap is empty!");
 		}
-		T min = getMin();
-
+		
+		T min = getMin(); 
 		data[0] = data[current_size-1];
 		heapify(0);
 		data[current_size-1] = null;
 		current_size--;
-
-		return min;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private void heapify(int pos) {
-		if (!isLeaf(pos)) {
-			T curr = (T)data[pos];
-			T lChild = null;
-			T rChild = null;
-			if (data[getLChildPos(pos)] != null) {
-				lChild = (T)data[getLChildPos(pos)];
-				if (getRChildPos(pos) < current_size) {	
-					rChild = (T)data[getRChildPos(pos)];			
-					if (curr.compareTo(lChild) > 0 || curr.compareTo(rChild) > 0) {
-						if (lChild.compareTo(rChild) < 0) {
-							T temp = (T) data[pos];
-							data[pos] = lChild;
-							data[getLChildPos(pos)] = temp;
-							heapify(getLChildPos(pos));
-						} else {
-							T temp = (T) data[pos];
-							data[pos] = rChild;
-							data[getRChildPos(pos)] = temp;
-							heapify(getRChildPos(pos));
-						}
-					}
-				} else {
-					T temp = (T) data[pos];
-					data[pos] = lChild;
-					data[getLChildPos(pos)] = temp;
-				}			
-			} 	
+		
+		if (current_size > 0 && current_size == data.length/4) {
+			resize(data.length/2);
 		}
+		
+		itrList.remove(min);
+		Collections.sort(itrList);
+		
+		return min;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -202,26 +218,9 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	 * are equal, with the code providing the equality contract.
 	 */
 
-
 	@Override
 	public Iterator<T> iterator() {
-		Object[] lst = new Object[current_size];
-		for (int i = 0; i < current_size; i++)
-			lst[i] = data[i];
-		
-		Arrays.sort(lst);
-		return new Iterator<T>() {			
-			@Override
-			public boolean hasNext() {
-				return (itr_index != current_size);
-			}
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public T next() {
-				return (T)lst[itr_index++];
-			}
-		};
+		return itrList.iterator();
 	}
 
 }

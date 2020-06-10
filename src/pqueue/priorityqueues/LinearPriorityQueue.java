@@ -28,7 +28,7 @@ import java.util.*;
  *
  * @param <T> The type held by the container.
  *
- * @author  ---- YOUR NAME HERE ----
+ * @author  ---- Jemimah E.P. Salvacion ----
  *
  * @see MinHeapPriorityQueue
  * @see PriorityQueue
@@ -42,7 +42,6 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 	private ArrayList<T> data;
 	private int capacity;
 	private int size;
-	private int index = 0;
 
 	/* *********************************************************************************************************
 	 * Implement the following public methods. You should erase the throwings of UnimplementedMethodExceptions.*
@@ -68,6 +67,8 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 	 * @throws InvalidCapacityException if the capacity provided is less than 1.
 	 */
 	public LinearPriorityQueue(int capacity) throws InvalidCapacityException{	// DO *NOT* ERASE THE "THROWS" DECLARATION!
+		if (capacity < 1)
+			throw new InvalidCapacityException("Can't initialize with capacity input < 1.");
 		data = new ArrayList<T>();
 		this.capacity = capacity;
 		size = 0;
@@ -141,17 +142,7 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-		return new Iterator<T>() {			
-			@Override
-			public boolean hasNext() {
-				return (data.get(index+1)!=null);
-			}
-
-			@Override
-			public T next() {
-				return data.get(index++);
-			}
-		};
+		return data.iterator();
 	}
 
 }
