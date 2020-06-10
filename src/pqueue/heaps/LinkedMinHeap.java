@@ -23,7 +23,7 @@ import pqueue.trees.EmptyTreeException;
  * binary tree of nodes and references. Use the skeleton code we have provided to your advantage, but always remember
  * that the only functionality our tests can test is {@code public} functionality.</p>
  * 
- * @author --- YOUR NAME HERE! ---
+ * @author --- Jemimah E.P. Salvacion ---
  *
  * @param <T> The {@link Comparable} type of object held by {@code this}.
  *
@@ -60,12 +60,12 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
      * *************************************************************************************/
 	private int size;
 	private int index = 0;
+	private ArrayList<T> elementList;
 	
 	/* Helper methods for insert: */
 	private MinHeapNode build(T newElt, MinHeapNode rt) {
 		
 		if (rt == null) {
-			size++;
 			return new MinHeapNode(newElt);
 		} 
 		else if (rt.lChild != null && rt.rChild != null) {
@@ -180,6 +180,7 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	public LinkedMinHeap() {
 		root = null;
 		size = 0;
+		elementList = new ArrayList<T>();
 	}
 
 	/**
@@ -191,6 +192,8 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		root = new MinHeapNode(rootElement);
 		root.lChild = null;
 		root.rChild = null;
+		elementList = new ArrayList<T>();
+		elementList.add(rootElement);
 	}
 
 	/**
@@ -202,6 +205,7 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	 * @param other The {@link MinHeap} to copy the elements from.
 	 */
 	public LinkedMinHeap(MinHeap<T> other) {
+		elementList = new ArrayList<T>();
 		for(T item : other) {
 			insert(item);
 		}
@@ -252,11 +256,18 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		if (isEmpty()) {
 			root = new MinHeapNode(element);
 			size = 1;
-		} else {
-			root = build(element,root);
-			if (size > 1)
-				root = sort(root);
+			elementList.add(element);
+			return;
+		} 
+		root = build(element,root);
+		if (size > 1) {
+			root = sort(root);
 		}
+		size++;	
+		if (elementList != null)
+			elementList.clear();
+		inOrder(root,elementList);
+		Collections.sort(elementList);		
 	}
 
 	@Override
@@ -270,32 +281,22 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	public T deleteMin() throws EmptyHeapException {    // DO *NOT* ERASE THE "THROWS" DECLARATION!
 		if(isEmpty()) {
 			throw new EmptyHeapException("Min Heap is empty.");
-		} else {
-			T min = getMin();		
-			root = deleteHelper(root);
-			root = sort(root);
-			
-			return min;
 		}
+		
+		root = deleteHelper(root);
+		root = sort(root);
+		size--;
+		
+		elementList.clear();
+		inOrder(root,elementList);
+		Collections.sort(elementList);
+		
+		return getMin();	
 	}
 
 	@Override
 	public Iterator<T> iterator() {
-		ArrayList<T> elementList = new ArrayList<T>();
-		inOrder(root,elementList);
-		Collections.sort(elementList);
-		
-		return new Iterator<T>() {			
-			@Override
-			public boolean hasNext() {
-				return (index != size);
-			}
-
-			@Override
-			public T next() {
-				return elementList.get(index++);
-			}
-		};
+		return elementList.iterator();
 	}
 	
 	// Additional public methods to enhance testing
