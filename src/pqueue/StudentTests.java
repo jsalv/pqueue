@@ -16,6 +16,7 @@ import pqueue.priorityqueues.PriorityQueue;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 /**
@@ -25,65 +26,65 @@ import java.util.Iterator;
  */
 public class StudentTests {
 
-//    private static String throwableInfo(Throwable thrown){
-//        return "Caught a " + thrown.getClass().getSimpleName() +
-//                " with message: " + thrown.getMessage();
-//    }
-//
-//    private MinHeap<String> myHeap;
-//    private PriorityQueue<String> myQueue;
-//
-//    @Test
-//    public void initAndAddOneElement() throws InvalidPriorityException {
-//        try {
-//            myHeap = new ArrayMinHeap<>();
-//            myQueue = new MinHeapPriorityQueue<>();
-//        } catch(Throwable t){
-//            fail(throwableInfo(t));
-//        }
-//        assertTrue("After initialization, all MinHeap and PriorityQueue implementations should report that they are empty.",
-//                myHeap.isEmpty() && myQueue.isEmpty());
-//        assertTrue("After initialization, all MinHeap and PriorityQueue implementations should report a size of 0.",
-//                (myHeap.size() == 0) && (myQueue.size() == 0));
-//        myHeap.insert("Mary");
-//        assertEquals("After inserting an element, ArrayMinHeap instances should report a size of 1.", 1, myHeap.size());
-//
-//        // MinHeap::enqueue() declares that it checks InvalidPriorityException if priority <= 0 (from the docs of MinHeap).
-//        // In this case, we know for sure that InvalidPriorityException should *not* be thrown, since priority = 2 >= 0.
-//        // To avoid cluttering a code with "dummy" try-catch blocks, we declare InvalidPriorityException as checked from
-//        // this test as well. This is why we have the throws declaration after the name of the test.
-//        myQueue.enqueue("Jason", 2);
-//        assertEquals("After inserting an element, MinHeapPriorityQueue instances should report a size of 1.", 1, myQueue.size());
-//    }
-//
-//    // Here is one simple way to write tests that expect an Exception to be thrown. Another, more powerful method is to
-//    // use the class org.junit.rules.ExpectedException: https://junit.org/junit4/javadoc/4.12/org/junit/rules/ExpectedException.html
-//    @Test(expected = InvalidCapacityException.class)
-//    public void ensureInvalidCapacityExceptionThrown() throws InvalidCapacityException{
-//         myQueue = new LinearPriorityQueue<>(-2);
-//    }
-//
-//    @Test(expected = InvalidPriorityException.class)
-//    public void ensureInvalidPriorityExceptionThrown() throws InvalidPriorityException, InvalidCapacityException{
-//        myQueue = new LinearPriorityQueue<>(4);
-//        myQueue.enqueue("Billy", -1);
-//    }
-//
-//    @Test
-//    public void testEnqueingOrder() throws InvalidPriorityException, EmptyPriorityQueueException {
-//        myQueue = new MinHeapPriorityQueue<>();
-//        myQueue.enqueue("Ashish", 8);
-//        myQueue.enqueue("Diana", 2);        // Lower priority, so should be up front.
-//        myQueue.enqueue("Adam", 2);        // Same priority, but should be second because of FIFO.
-//        assertEquals("We were expecting Diana up front.", "Diana", myQueue.getFirst());
-//    }
-//
-//    @Test
-//    public void testDequeuingOrder() throws InvalidPriorityException, EmptyPriorityQueueException {
-//        testEnqueingOrder();    // To populate myQueue with the same elements.
-//        myQueue.dequeue();      // Now Adam should be up front.
-//        assertEquals("We were expecting Adam up front.", "Adam", myQueue.getFirst());
-//    }
+    private static String throwableInfo(Throwable thrown){
+        return "Caught a " + thrown.getClass().getSimpleName() +
+                " with message: " + thrown.getMessage();
+    }
+
+    private MinHeap<String> myHeap;
+    private PriorityQueue<String> myQueue;
+
+    @Test
+    public void initAndAddOneElement() throws InvalidPriorityException {
+        try {
+            myHeap = new ArrayMinHeap<>();
+            myQueue = new MinHeapPriorityQueue<>();
+        } catch(Throwable t){
+            fail(throwableInfo(t));
+        }
+        assertTrue("After initialization, all MinHeap and PriorityQueue implementations should report that they are empty.",
+                myHeap.isEmpty() && myQueue.isEmpty());
+        assertTrue("After initialization, all MinHeap and PriorityQueue implementations should report a size of 0.",
+                (myHeap.size() == 0) && (myQueue.size() == 0));
+        myHeap.insert("Mary");
+        assertEquals("After inserting an element, ArrayMinHeap instances should report a size of 1.", 1, myHeap.size());
+
+        // MinHeap::enqueue() declares that it checks InvalidPriorityException if priority <= 0 (from the docs of MinHeap).
+        // In this case, we know for sure that InvalidPriorityException should *not* be thrown, since priority = 2 >= 0.
+        // To avoid cluttering a code with "dummy" try-catch blocks, we declare InvalidPriorityException as checked from
+        // this test as well. This is why we have the throws declaration after the name of the test.
+        myQueue.enqueue("Jason", 2);
+        assertEquals("After inserting an element, MinHeapPriorityQueue instances should report a size of 1.", 1, myQueue.size());
+    }
+
+    // Here is one simple way to write tests that expect an Exception to be thrown. Another, more powerful method is to
+    // use the class org.junit.rules.ExpectedException: https://junit.org/junit4/javadoc/4.12/org/junit/rules/ExpectedException.html
+    @Test(expected = InvalidCapacityException.class)
+    public void ensureInvalidCapacityExceptionThrown() throws InvalidCapacityException{
+         myQueue = new LinearPriorityQueue<>(-2);
+    }
+
+    @Test(expected = InvalidPriorityException.class)
+    public void ensureInvalidPriorityExceptionThrown() throws InvalidPriorityException, InvalidCapacityException{
+        myQueue = new LinearPriorityQueue<>(4);
+        myQueue.enqueue("Billy", -1);
+    }
+
+    @Test
+    public void testEnqueingOrder() throws InvalidPriorityException, EmptyPriorityQueueException {
+        myQueue = new MinHeapPriorityQueue<>();
+        myQueue.enqueue("Ashish", 8);
+        myQueue.enqueue("Diana", 2);        // Lower priority, so should be up front.
+        myQueue.enqueue("Adam", 2);        // Same priority, but should be second because of FIFO.
+        assertEquals("We were expecting Diana up front.", "Diana", myQueue.getFirst());
+    }
+
+    @Test
+    public void testDequeuingOrder() throws InvalidPriorityException, EmptyPriorityQueueException {
+        testEnqueingOrder();    // To populate myQueue with the same elements.
+        myQueue.dequeue();      // Now Adam should be up front.
+        assertEquals("We were expecting Adam up front.", "Adam", myQueue.getFirst());
+    }
 
     /* ******************************************************************************************************** */
     /* ********************** YOU SHOULD ADD TO THESE UNIT TESTS BELOW. *************************************** */
@@ -119,6 +120,26 @@ public class StudentTests {
     	
     	assertEquals("Expected left child of 0 is 1.",1,lChild_0);
     	assertEquals("Expected right child of 0 is 2.",2,rChild_0);
+    }
+    
+    @Test
+    public void testMinHeapIterator() {
+    	LinkedMinHeap<Integer> heap = new LinkedMinHeap<Integer>();
+    	String errMessage = "";
+    	
+    	heap.insert(0);
+    	heap.insert(1);
+    	heap.insert(2);
+    	
+    	try {
+    		for(int i : heap) {
+        		heap.insert(3);;
+        	}
+    	} catch(ConcurrentModificationException e) {
+    		errMessage = "Caught ConcurrentModificationException error.";
+    	}
+    	assertEquals("Caught ConcurrentModificationException error.",errMessage);    	
+    	
     }
     
     @Test
@@ -197,8 +218,8 @@ public class StudentTests {
     	LinkedMinHeap<Integer> heap1 = new LinkedMinHeap<Integer>(heap);
     	
     	// Test if lChild and rChild of node 0 is correct.
-    	int lChild_0 = heap.getLChild(0,a,heap.getRoot());
-    	int rChild_0 = heap.getRChild(0,a,heap.getRoot());
+    	int lChild_0 = heap.getLChild(0,a,heap1.getRoot());
+    	int rChild_0 = heap.getRChild(0,a,heap1.getRoot());
     	
     	assertEquals("Expected left child of 0 is 1.",1,lChild_0);
     	assertEquals("Expected right child of 0 is 2.",2,rChild_0);
@@ -252,36 +273,55 @@ public class StudentTests {
     }
     
     @Test
-    public void testArrayMinHeapIterator() {
+    public void testDeleteMinArrayMinHeap2() throws EmptyHeapException {
+    	ArrayMinHeap<Integer> h = new ArrayMinHeap<Integer>();
+    	h.insert(100);
+    	h.insert(90);
+    	h.insert(80);
+    	h.insert(70);
+    	h.insert(60);
+    	h.insert(50);
+    	h.insert(40);
+    	h.insert(30);
+    	h.insert(20);
+    	h.insert(10);
+    	
+    	for (int i = 0; i < 10; i++) {
+    		h.deleteMin();
+    	}
+    }
+    
+    @Test
+    public void testArrayMinHeapIterator() throws EmptyHeapException {
     	ArrayMinHeap<Integer> arrHeap1 = new ArrayMinHeap<Integer>(30);
+    	String errMessage = "";
     	arrHeap1.insert(20);
     	arrHeap1.insert(10);
     	
-    	int x = arrHeap1.iterator().next();
-    	assertEquals(10,x);
-    	
-    	int y = arrHeap1.iterator().next();
-    	assertEquals(20,y);
-    	
-    	int z = arrHeap1.iterator().next();
-    	assertEquals(30,z);
+    	try {
+	    	for (int i : arrHeap1) {
+	    		arrHeap1.insert(40);
+	    	}
+    	} catch(ConcurrentModificationException e) {
+    		errMessage = "Caught ConcurrentModificationException error.";
+    	}
+    	assertEquals("Caught ConcurrentModificationException error.",errMessage);
     }
     
     @Test
     public void testMakeLinearPriorityQueue() throws InvalidPriorityException {
     	LinearPriorityQueue<Integer> queue = new LinearPriorityQueue<Integer>();
-    	Iterator<Integer> itr = queue.iterator();
+    	String result = "";
     	
     	queue.enqueue(1,1);
     	queue.enqueue(3,2);
     	queue.enqueue(4,3);
     	queue.enqueue(2,2);
     	
-    	int a = itr.next();
-    	assertEquals(1,a);
-    	
-    	int b = itr.next();
-    	assertEquals(2,b);
+    	for (int i : queue) {
+    		result += Integer.toString(i) + " ";
+    	}
+    	assertEquals("1 3 2 4 ",result);
     }
     
     @Test
@@ -289,15 +329,91 @@ public class StudentTests {
     	LinearPriorityQueue<Integer> queue = new LinearPriorityQueue<Integer>();
     	
     	queue.enqueue(1,1);
-    	queue.enqueue(3,2);
-    	queue.enqueue(4,3);
     	queue.enqueue(2,2);
+    	queue.enqueue(4,3);
+    	queue.enqueue(3,2);
+    	
+    	queue.dequeue();
     	queue.dequeue();
     	
     	int x = queue.getFirst();
-    	assertEquals("Expected first element is currently 2.",2,x);
+    	assertEquals("Expected first element is currently 3.",3,x);
     }
+    
+    @Test
+    public void testDeleteManyHeaps() throws EmptyHeapException {
+    	ArrayMinHeap<Integer> arrHeap1 = new ArrayMinHeap<Integer>(10);
     	
+    	arrHeap1.insert(20);
+    	arrHeap1.insert(30);
+    	arrHeap1.deleteMin();	
+    	arrHeap1.insert(40);
+    	arrHeap1.insert(50);
+    	arrHeap1.insert(60);
+    	arrHeap1.insert(70);
+    	
+    	arrHeap1.deleteMin();
+    	arrHeap1.deleteMin();
+    	arrHeap1.deleteMin();
+    	arrHeap1.deleteMin();
+    	arrHeap1.deleteMin();
+    }
+    
+    @Test
+    public void testDeleteManyHeaps2() throws EmptyHeapException {
+    	ArrayMinHeap<Integer> arrHeap1 = new ArrayMinHeap<Integer>(10);
+    	arrHeap1.insert(20);
+    	arrHeap1.insert(30);
+    	arrHeap1.insert(40);
+    	
+    	arrHeap1.deleteMin();
+    }
+    
+    @Test
+    public void testMakeMPQIterator() throws InvalidPriorityException {
+    	PriorityQueue<String> mpq = new MinHeapPriorityQueue<>();
+    	String errMessage = "";
+    	
+    	mpq.enqueue("Ashish", 8);
+    	mpq.enqueue("Diana", 2);
+    	mpq.enqueue("Adam", 2);
+
+    	try {
+    		for(String s : mpq) {
+        		mpq.enqueue("Sylvia", 1);
+        	}
+    	} catch(ConcurrentModificationException e) {
+    		errMessage = "Caught ConcurrentModificationException error.";
+    	}
+    	assertEquals("Caught ConcurrentModificationException error.",errMessage);    	
+    }
+    
+    @Test
+    public void testMakeLinearPQIterator() throws InvalidPriorityException, EmptyPriorityQueueException {
+    	PriorityQueue<String> pq = new LinearPriorityQueue<>();
+    	String errMessage = "";
+    	
+    	pq.enqueue("Ashish", 8);
+    	pq.enqueue("Diana", 2);
+    	pq.enqueue("Adam", 2);
+    	
+    	try {
+    		for(String s : pq) {
+        		pq.enqueue("Sylvia", 1);
+        	}
+    	} catch(ConcurrentModificationException e) {
+    		errMessage = "Caught ConcurrentModificationException error.";
+    	}
+    	assertEquals("Caught ConcurrentModificationException error.",errMessage);    	
+    	
+    	pq.enqueue("Joao", 1);
+    	pq.dequeue();
+    	pq.dequeue();
+    	pq.dequeue();
+    	pq.dequeue();
+    	
+    	assertEquals("Adam",pq.getFirst());
+    }
 }
 
 

@@ -50,6 +50,7 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	// variables
 	private int current_size;
 	private ArrayList<T> itrList;
+	private Iterator<T> itr;
 	
 	// methods
 	private void resize(int newCapacity) {
@@ -67,12 +68,27 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		return (2*index) + 2;
 	}
 	
+	
 	private boolean isLeaf(int index) {
 		return (index <= current_size && index >= current_size/2);
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void heapify(int pos) {
+		// Find parent 
+	    int parent = (pos - 1) / 2; 
+	    T curr = (T)data[pos];
+	    T parentData = (T)data[parent];
+	    if (parentData != null) { 
+	        if (curr.compareTo(parentData) < 0) { 
+	        	T temp = (T) data[pos];
+				data[pos] = parentData;
+				data[parent] = temp;
+	
+	            // Recursively heapify the parent node 
+	            heapify(parent); 
+	        } 
+	    } /*
 		if (!isLeaf(pos)) {
 			T curr = (T)data[pos];
 			T lChild = null;
@@ -93,15 +109,87 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 							data[getRChildPos(pos)] = temp;
 							heapify(getRChildPos(pos));
 						}
+					} else {
+						if (height(getLChildPos(0)) > height(getRChildPos(0))) {
+							heapify(getLChildPos(0));
+						} else {
+							heapify(getRChildPos(0));
+						}
 					}
 				} else 
 				if (curr.compareTo(lChild) > 0) { 
 					T temp = (T) data[pos];
 					data[pos] = lChild;
 					data[getLChildPos(pos)] = temp;
+					heapify(0);
+				}			
+			} 	
+		}*/
+	}
+	
+	private void siftDown(int pos) {
+		if (!isLeaf(pos)) {
+			T curr = (T)data[pos];
+			T lChild = null;
+			T rChild = null;
+			if (data[getLChildPos(pos)] != null) {
+				lChild = (T)data[getLChildPos(pos)];
+				if (getRChildPos(pos) < current_size) {	
+					rChild = (T)data[getRChildPos(pos)];			
+					if (curr.compareTo(lChild) > 0 || curr.compareTo(rChild) > 0) {
+						if (lChild.compareTo(rChild) < 0) {
+							T temp = (T) data[pos];
+							data[pos] = lChild;
+							data[getLChildPos(pos)] = temp;
+							siftDown(getLChildPos(pos));
+						} else {
+							T temp = (T) data[pos];
+							data[pos] = rChild;
+							data[getRChildPos(pos)] = temp;
+							siftDown(getRChildPos(pos));
+						}
+					} else {
+						if (height(getLChildPos(0)) > height(getRChildPos(0))) {
+							siftDown(getLChildPos(0));
+						} else {
+							siftDown(getRChildPos(0));
+						}
+					}
+				} else 
+				if (curr.compareTo(lChild) > 0) { 
+					T temp = (T) data[pos];
+					data[pos] = lChild;
+					data[getLChildPos(pos)] = temp;
+					heapify(0);
 				}			
 			} 	
 		}
+	}
+	
+	private int getRightMostNode(int pos,int prev) {
+		if (pos > current_size) {
+			return prev;
+		}
+		int rChildIndex = 0;
+		rChildIndex = getRChildPos(pos);
+		prev = pos;
+		
+		return getRightMostNode(rChildIndex,prev);
+	}
+	
+	private int height(int pos) {
+		if (pos >= current_size) {
+			return -1;
+		} else {
+			int lHeight = height(getLChildPos(pos));
+			int rHeight = height(getRChildPos(pos));
+			
+			if (rHeight > lHeight)
+				return rHeight + 1;
+			else
+				return lHeight + 1;
+		}
+		
 	}
 
 	/* *********************************************************************************************************
@@ -116,6 +204,7 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		current_size = 0;
 		data = new Object[current_size + 1];
 		itrList = new ArrayList<T>();
+		itr = itrList.iterator();
 	}
 
 	/**
@@ -128,6 +217,7 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		data[0] = rootElement;
 		itrList = new ArrayList<T>();
 		itrList.add(rootElement);
+		itr = itrList.iterator();
 	}
 
 	/**
@@ -168,7 +258,7 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		}
 		
 		data[current_size++] = element;
-		heapify(0);
+		heapify(current_size-1);
 		
 		itrList.add(element);
 		Collections.sort(itrList);
@@ -179,12 +269,11 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		if (isEmpty()) {
 			throw new EmptyHeapException("Heap is empty!");
 		}
-		
-		T min = getMin(); 
+
+		T min = getMin();
 		data[0] = data[current_size-1];
-		heapify(0);
-		data[current_size-1] = null;
-		current_size--;
+		data[--current_size] = null;
+		siftDown(0);
 		
 		if (current_size > 0 && current_size == data.length/4) {
 			resize(data.length/2);
@@ -219,8 +308,21 @@ public class ArrayMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	 */
 
 	@Override
-	public Iterator<T> iterator() {
-		return itrList.iterator();
+	public Iterator<T> iterator() {	
+		itr = itrList.iterator();
+		return new Iterator<T>() {
+
+			@Override
+			public boolean hasNext() {
+				return itr.hasNext();
+			}
+
+			@Override
+			public T next() {
+				return itr.next();
+			}
+		
+		};		
 	}
 
 }

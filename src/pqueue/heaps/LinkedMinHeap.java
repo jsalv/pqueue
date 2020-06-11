@@ -61,6 +61,7 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 	private int size;
 	private int index = 0;
 	private ArrayList<T> elementList;
+	private Iterator<T> itr;
 	
 	/* Helper methods for insert: */
 	private MinHeapNode build(T newElt, MinHeapNode rt) {
@@ -181,6 +182,7 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		root = null;
 		size = 0;
 		elementList = new ArrayList<T>();
+		itr = elementList.iterator();
 	}
 
 	/**
@@ -194,6 +196,7 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		root.rChild = null;
 		elementList = new ArrayList<T>();
 		elementList.add(rootElement);
+		itr = elementList.iterator();
 	}
 
 	/**
@@ -209,6 +212,7 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		for(T item : other) {
 			insert(item);
 		}
+		itr = elementList.iterator();
 	}
 
 
@@ -282,7 +286,7 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		if(isEmpty()) {
 			throw new EmptyHeapException("Min Heap is empty.");
 		}
-		
+		T prevRoot = root.data;
 		root = deleteHelper(root);
 		root = sort(root);
 		size--;
@@ -291,12 +295,25 @@ public class LinkedMinHeap<T extends Comparable<T>> implements MinHeap<T> {
 		inOrder(root,elementList);
 		Collections.sort(elementList);
 		
-		return getMin();	
+		return prevRoot;	
 	}
 
 	@Override
 	public Iterator<T> iterator() {
-		return elementList.iterator();
+		itr = elementList.iterator();
+		return new Iterator<T>() {
+
+			@Override
+			public boolean hasNext() {
+				return itr.hasNext();
+			}
+
+			@Override
+			public T next() {
+				return itr.next();
+			}
+		
+		};	
 	}
 	
 	// Additional public methods to enhance testing

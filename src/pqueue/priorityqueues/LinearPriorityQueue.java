@@ -40,6 +40,7 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 	 * Write any private data elements or private methods for LinearPriorityQueue here...*
 	 * ***********************************************************************************/
 	private ArrayList<T> data;
+	private Iterator<T> itr;
 	private int capacity;
 	private int size;
 
@@ -56,6 +57,7 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 		data = new ArrayList<T>();
 		capacity = 10;
 		size = 0;
+		itr = data.iterator();
 	}
 
 	/**
@@ -72,6 +74,7 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 		data = new ArrayList<T>();
 		this.capacity = capacity;
 		size = 0;
+		itr = data.iterator();
 	}
 
 	@Override
@@ -97,10 +100,10 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 				int count = 1;
 				
 				for (T item : data) {
+					temp.add(item);
 					if (count == priority) {
 						temp.add(element);
-					}
-					temp.add(item);
+					}					
 					count++;
 				}
 				data.clear();
@@ -116,7 +119,8 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 	public T dequeue() throws EmptyPriorityQueueException { 	// DO *NOT* ERASE THE "THROWS" DECLARATION!
 		T first = data.get(0);	
 		data.remove(0);
-		
+		size--;
+		capacity++;
 		return first;
 	}
 
@@ -142,7 +146,20 @@ public class LinearPriorityQueue<T> implements PriorityQueue<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-		return data.iterator();
+		itr = data.iterator();
+		return new Iterator<T>() {
+
+			@Override
+			public boolean hasNext() {
+				return itr.hasNext();
+			}
+
+			@Override
+			public T next() {
+				return itr.next();
+			}
+		
+		};	
 	}
 
 }

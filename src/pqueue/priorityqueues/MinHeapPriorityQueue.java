@@ -52,6 +52,7 @@ public class MinHeapPriorityQueue<T> implements PriorityQueue<T>{
 	private Object[] eltData;
 	private int curr_size;
 	private ArrayList<T> itrList;
+	private Iterator<T> itr;
 	
 	private void resize(int newCapacity) {
 		Object[] temp = new Object[newCapacity];
@@ -72,6 +73,7 @@ public class MinHeapPriorityQueue<T> implements PriorityQueue<T>{
 		curr_size = 0;
 		eltData = new Object[curr_size+1];
 		itrList = new ArrayList<T>();
+		itr = itrList.iterator();
 	}
 
 	@Override
@@ -163,6 +165,19 @@ public class MinHeapPriorityQueue<T> implements PriorityQueue<T>{
 
 	@Override
 	public Iterator<T> iterator() {
-		return itrList.iterator();
+		itr = itrList.iterator();
+		return new Iterator<T>() {
+
+			@Override
+			public boolean hasNext() {
+				return itr.hasNext();
+			}
+
+			@Override
+			public T next() {
+				return itr.next();
+			}
+		
+		};	
 	}
 }
